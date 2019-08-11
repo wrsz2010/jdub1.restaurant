@@ -3,6 +3,7 @@ package com.jdub1;
 import com.jdub1.db.EntityDao;
 import com.jdub1.db.HibernateUtil;
 import com.jdub1.model.Order;
+import com.jdub1.service.OrderService;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -17,7 +18,7 @@ public class Main {
 
         Scanner scanner = new Scanner(System.in);
         boolean isworking = true;
-        EntityDao dao = new EntityDao();
+        OrderService orderService = new OrderService();
 
         do {
             String komenda = scanner.nextLine();
@@ -39,34 +40,24 @@ public class Main {
                 System.out.println("Do zaplaty: ");
                 double doZaplaty = Double.parseDouble(scanner.nextLine());
                 order.setToPay(doZaplaty);
-                dao.saveOrUpdate(order);
+                orderService.add(order);
             } else if (komenda.equalsIgnoreCase("listuj")) {
 
-                dao.list(Order.class).forEach(System.out::println);
+                orderService.findAll().forEach(System.out::println);
             } else if (komenda.equalsIgnoreCase("dostarczono")) {
 
                 System.out.println("Podaj numer zamowienia: ");
                 Long id = Long.parseLong(scanner.nextLine());
 
-                Order delivered = dao.getById(Order.class, id);
-                delivered.setTimeDelivered(LocalDateTime.now());
-                dao.saveOrUpdate(delivered);
+                orderService.delivered(id);
             } else if (komenda.equalsIgnoreCase("zaplacono")){
                 System.out.println("Podaj numer zamowienia: ");
                 Long id = Long.parseLong(scanner.nextLine());
 
-                Order zaplacono = dao.getById(Order.class, id);
-
                 System.out.println("Podaj Kwote: ");
                 double kwota = Double.parseDouble(scanner.nextLine());
 
-                if (dao.getById(Order.class, id).getToPay() == kwota) {
-
-                    zaplacono.setPaid(kwota);
-                    dao.saveOrUpdate(zaplacono);
-                } else {
-                    System.out.println("Za mala kwota !!!");
-                }
+                orderService.paid(id, kwota);
 
             } else if (komenda.equalsIgnoreCase("quit")) {
                 isworking = false;
