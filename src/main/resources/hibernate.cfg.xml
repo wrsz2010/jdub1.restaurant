@@ -19,6 +19,7 @@
         <property name="show_sql">false</property>
 
         <mapping class="com.jdub1.model.Order"/>
+        <mapping class="com.jdub1.model.Product"/>
 
     </session-factory>
 </hibernate-configuration>

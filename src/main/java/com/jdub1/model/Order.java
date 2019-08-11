@@ -17,11 +17,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -32,7 +30,10 @@ public class Order implements IBaseEntity{
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String description;
+//    private String description;
+
+    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
+    private Set<Product> products;
 
     @CreationTimestamp
     private LocalDateTime timeOrdered;
